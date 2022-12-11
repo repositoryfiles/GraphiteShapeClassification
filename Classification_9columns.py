@@ -86,7 +86,7 @@ def main():
     # 画像ファイルごとの球状化率はこの変数に格納
     Nodularity_ISO = []
     
-    model_path = 'c:/Data/final_lightgbm_model_3columns' #モデルファイル名
+    model_path = 'c:/Data/final_lda_model_9columns' #モデルファイル名
 
     # 保存したモデルをロードする
     model = load_model(model_path)
@@ -97,7 +97,7 @@ def main():
         sys.exit()
         
     for filename in filenames:
-        columns = ['CSFm', 'AR', 'Conv'] #CSFm, AR, Conv
+        columns = ['CSF','Round','CSFm','CSFg','AR','MR','BF','Conv','Sol']
         X_test = pd.DataFrame(columns=[columns])
 
         # 画像ファイルの読み込み、サイズ取得（パス名に全角があるとエラーになる）
@@ -126,7 +126,6 @@ def main():
             contourArea_all += A
 
             hull = cv2.convexHull(cnt)
-
 
             Ac = cv2.contourArea(hull)
 
@@ -160,7 +159,7 @@ def main():
             Conv = Pc / P
             Sol = A / Ac
             #推論のためのデータ作成
-            X_data = [[CSFm, AR, Conv]]
+            X_data = [[CSF,Round,CSFm,CSFg,AR,MR,BF,Conv,Sol]]
             X_test = pd.DataFrame(X_data, columns=columns)
             
             #推論
@@ -195,7 +194,7 @@ def main():
         # 黒鉛をタイプⅠ～Ⅵに塗分けた画像の保存（画像ファイル名＋_nodularity(ISO)_3columnで同じフォルダに保存）
         src = filename
         idx = src.rfind(r'.')
-        result_ISO_filename = src[:idx] + "_nodularity(ISO)_3column." + src[idx+1:]
+        result_ISO_filename = src[:idx] + "_nodularity(ISO)_9columns." + src[idx+1:]
         cv2.imwrite(result_ISO_filename, img_color)
         
         # Num1～6：各画像ファイルのタイプⅠ～Ⅵの個数
@@ -208,7 +207,7 @@ def main():
         
     # Num1～6をファイル保存
     now = datetime.datetime.now()
-    f2 = open(str(os.path.dirname(filenames[0])) + '/result_{0:%Y%m%d%H%M}_3column'.format(now) + ".txt", 'w')
+    f2 = open(str(os.path.dirname(filenames[0])) + '/result_{0:%Y%m%d%H%M}_9columns'.format(now) + ".csv", 'w')
     if f2 != "":
         print("ファイル名, Ⅰの個数, Ⅱの個数, Ⅲの個数, Ⅳの個数, Ⅴの個数, Ⅵの個数, 球状化率(%)", file = f2) #ファイル名
         for i in range(len(filenames)):
