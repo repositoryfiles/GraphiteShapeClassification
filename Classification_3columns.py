@@ -207,7 +207,7 @@ def main():
         
     # Num1～6をファイル保存
     now = datetime.datetime.now()
-    output_file = (str(os.path.dirname(filenames[0])) + "/nodularity_{0:%Y%m%d%H%M}".format(now) + ".csv")
+    output_file = (str(os.path.dirname(filenames[0])) + "/nodularity_{0:%Y%m%d%H%M}_3columns".format(now) + ".csv")
 
     with open(output_file, mode="w") as f2:
         print("ファイル名, Ⅰの個数, Ⅱの個数, Ⅲの個数, Ⅳの個数, Ⅴの個数, Ⅵの個数, 球状化率(%)", file = f2) #ファイル名
